@@ -825,7 +825,7 @@ void Profiler::dumpCollapsed(std::ostream& out, Arguments& args) {
 
 void Profiler::dumpFlameGraph(std::ostream& out, Arguments& args, bool tree) {
     MutexLocker ml(_state_lock);
-    if (_state != IDLE || _engine == NULL) return;
+    if ((_state != IDLE && args._action != ACTION_DUMP_ON_THE_FLY) || _engine == NULL) return;
 
     FlameGraph flamegraph(args._title, args._counter, args._width, args._height, args._minwidth, args._reverse);
     FrameName fn(args._style, _thread_names_lock, _thread_names);
@@ -858,7 +858,7 @@ void Profiler::dumpFlameGraph(std::ostream& out, Arguments& args, bool tree) {
 
 void Profiler::dumpTraces(std::ostream& out, Arguments& args) {
     MutexLocker ml(_state_lock);
-    if (_state != IDLE || _engine == NULL) return;
+    if ((_state != IDLE && args._action != ACTION_DUMP_ON_THE_FLY) || _engine == NULL) return;
 
     FrameName fn(args._style | STYLE_DOTTED, _thread_names_lock, _thread_names);
     double percent = 100.0 / _total_counter;
@@ -897,7 +897,7 @@ void Profiler::dumpTraces(std::ostream& out, Arguments& args) {
 
 void Profiler::dumpFlat(std::ostream& out, Arguments& args) {
     MutexLocker ml(_state_lock);
-    if (_state != IDLE || _engine == NULL) return;
+    if ((_state != IDLE && args._action != ACTION_DUMP_ON_THE_FLY) || _engine == NULL) return;
 
     FrameName fn(args._style | STYLE_DOTTED, _thread_names_lock, _thread_names);
     double percent = 100.0 / _total_counter;
@@ -984,6 +984,7 @@ void Profiler::runInternal(Arguments& args, std::ostream& out) {
             break;
         case ACTION_DUMP:
             stop();
+        case ACTION_DUMP_ON_THE_FLY:
             switch (args._output) {
                 case OUTPUT_COLLAPSED:
                     dumpCollapsed(out, args);

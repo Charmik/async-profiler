@@ -40,6 +40,7 @@ const size_t EXTRA_BUF_SIZE = 512;
 //     stop          - stop profiling
 //     status        - print profiling status (inactive / running for X seconds)
 //     list          - show the list of available profiling events
+//     dump          - dump data on the fly
 //     version       - display the agent version
 //     event=EVENT   - which event to trace (cpu, alloc, lock, cache-misses etc.)
 //     collapsed[=C] - dump collapsed stacks (the format used by FlameGraph script)
@@ -166,6 +167,8 @@ Error Arguments::parse(const char* args) {
                 return Error("file must not be empty");
             }
             _file = value;
+        } else if (strcmp(arg, "dump") == 0) {
+            _action = ACTION_DUMP_ON_THE_FLY;
         }
     }
 

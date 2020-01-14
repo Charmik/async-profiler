@@ -10,6 +10,7 @@ usage() {
     echo "  list              list profiling events supported by the target JVM"
     echo "  collect           collect profile for the specified period of time"
     echo "                    and then stop (default action)"
+    echo "  dump              collect profiler data on the fly"
     echo "Options:"
     echo "  -e event          profiling event: cpu|alloc|lock|cache-misses etc."
     echo "  -d duration       run profiling for <duration> seconds"
@@ -108,7 +109,7 @@ while [[ $# -gt 0 ]]; do
         -h|"-?")
             usage
             ;;
-        start|resume|stop|status|list|collect)
+        start|resume|stop|status|list|collect|dump)
             ACTION="$1"
             ;;
         -v|--version)
@@ -229,6 +230,9 @@ case $ACTION in
             sleep 1
         done
         jattach "stop,file=$FILE,$OUTPUT$FORMAT"
+        ;;
+    dump)
+        jattach "dump,file=$FILE,$OUTPUT$FORMAT$PARAMS"
         ;;
     version)
         if [[ "$PID" == "" ]]; then

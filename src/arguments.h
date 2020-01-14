@@ -38,7 +38,8 @@ enum Action {
     ACTION_STATUS,
     ACTION_LIST,
     ACTION_VERSION,
-    ACTION_DUMP
+    ACTION_DUMP,
+    ACTION_DUMP_ON_THE_FLY
 };
 
 enum Counter {
